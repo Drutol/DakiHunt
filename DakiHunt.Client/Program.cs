@@ -2,6 +2,9 @@
 using Microsoft.AspNetCore.Blazor.Browser.Services;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using Blazor.Extensions.Storage;
+using DakiHunt.Client.BL;
+using DakiHunt.Client.Interfaces;
 
 namespace DakiHunt.Client
 {
@@ -11,7 +14,9 @@ namespace DakiHunt.Client
         {
             var serviceProvider = new BrowserServiceProvider(services =>
             {
-                // Add any custom services here
+                services.AddStorage();
+                services.AddSingleton<IApiCommunicator,ApiCommunicator>();
+                services.AddSingleton<IAuthorizationProvider,AuthorizationProvider>();
             });
 
             new BrowserRenderer(serviceProvider).AddComponent<App>("app");

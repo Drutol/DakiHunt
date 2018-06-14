@@ -7,12 +7,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Blazor.Extensions.Storage" Version="0.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Blazor.Browser" Version="0.4.0" />
     <PackageReference Include="Microsoft.AspNetCore.Blazor.Build" Version="0.4.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DakiHunt.Shared\DakiHunt.Shared.csproj" />
+    <ProjectReference Include="..\DakiHunt.Models\DakiHunt.Models.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Pages\Auth.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
   </ItemGroup>
 
 </Project>
