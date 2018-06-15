@@ -2,11 +2,16 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IdentityModel.Tokens.Jwt;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using DakiHunt.DataAccess.Entities.Auth;
+using DakiHunt.Models.Auth;
 using DakiHunt.Models.Dtos;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -14,16 +19,19 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace DakiHunt.Api.Controllers
 {
+    [ApiController]
+    [AllowAnonymous]
+    [EnableCors("GlobalPolicy")]
     [Route("[controller]/[action]")]
     public class AccountController : Controller
     {
-        private readonly SignInManager<IdentityUser> _signInManager;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly SignInManager<AppUser> _signInManager;
+        private readonly UserManager<AppUser> _userManager;
         private readonly IConfiguration _configuration;
 
         public AccountController(
-            UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager,
+            UserManager<AppUser> userManager,
+            SignInManager<AppUser> signInManager,
             IConfiguration configuration
             )
         {
@@ -33,43 +41,74 @@ namespace DakiHunt.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<object> Login([FromBody] SignInDto model)
+        public async Task<IActionResult> Login([FromBody] SignInDto model)
         {
             var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, false, false);
 
             if (result.Succeeded)
             {
-                var appUser = _userManager.Users.SingleOrDefault(r => r.Email == model.Username);
-                return GenerateJwtToken(appUser.Email, appUser);
+                var user = _userManager.Users.SingleOrDefault(r => r.UserName == model.Username);
+                user.RefreshToken = GenerateRefreshToken();
+                await _userManager.UpdateAsync(user);
+                return Ok(GenerateJwtToken(user));
             }
 
-            throw new ApplicationException("INVALID_LOGIN_ATTEMPT");
+            return Forbid(result.ToString());
         }
 
         [HttpPost]
-        public async Task<object> Register([FromBody] RegisterDto model)
+        public async Task<IActionResult> Register([FromBody] RegisterDto model)
         {
-            var user = new IdentityUser
+            var user = new AppUser
             {
-                UserName = model.Email,
-                Email = model.Email
+                Email = model.Email,
+                UserName = model.Username,
             };
             var result = await _userManager.CreateAsync(user, model.Password);
 
             if (result.Succeeded)
             {
+                user.RefreshToken = GenerateRefreshToken();
+                await _userManager.UpdateAsync(user);
                 await _signInManager.SignInAsync(user, false);
-                return GenerateJwtToken(model.Email, user);
+                return Ok(GenerateJwtToken(user));
             }
 
-            throw new ApplicationException("UNKNOWN_ERROR");
+            return BadRequest(result);
         }
 
-        private object GenerateJwtToken(string email, IdentityUser user)
+        [HttpPost]
+        public async Task<IActionResult> RefreshToken()
+        {
+            string refreshToken = "";
+            using (var reader = new StreamReader(Request.Body, Encoding.UTF8))
+            {
+                refreshToken = await reader.ReadToEndAsync();
+            }
+
+            var user = _userManager.Users.FirstOrDefault(appUser => appUser.RefreshToken == refreshToken);
+
+            if (user != null)
+            {
+                user.RefreshToken = GenerateRefreshToken();
+                await _userManager.UpdateAsync(user);
+                await _signInManager.SignInAsync(user, false);
+                return Ok(GenerateJwtToken(user));
+            }
+
+            return Forbid();
+        }
+
+        private string GenerateRefreshToken()
+        {
+            return Guid.NewGuid().ToString();
+        }
+
+        private TokenModel GenerateJwtToken(AppUser user)
         {
             var claims = new List<Claim>
             {
-                new Claim(JwtRegisteredClaimNames.Sub, email),
+                new Claim(JwtRegisteredClaimNames.Sub, user.Email),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(ClaimTypes.NameIdentifier, user.Id)
             };
@@ -79,14 +118,19 @@ namespace DakiHunt.Api.Controllers
             var expires = DateTime.Now.AddDays(1);
 
             var token = new JwtSecurityToken(
-                _configuration["JwtIssuer"],
-                _configuration["JwtIssuer"],
+                _configuration["Jwt:Issuer"],
+                _configuration["Jwt:Issuer"],
                 claims,
                 expires: expires,
                 signingCredentials: creds
             );
 
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            return new TokenModel
+            {
+                ExpirationDate = expires,
+                Token = new JwtSecurityTokenHandler().WriteToken(token),
+                RefreshToken = user.RefreshToken
+            };
         }
     }
 }

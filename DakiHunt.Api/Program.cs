@@ -20,6 +20,6 @@ namespace DakiHunt.Api
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
-                .UseUrls("https://localhost:8765/");
+                .UseUrls("http://127.0.0.1:84765/");
     }
 }

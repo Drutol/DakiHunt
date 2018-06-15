@@ -35,9 +35,15 @@ namespace DakiHunt.Api
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            services.AddDbContext<DakiDbContext>(builder => builder.UseInMemoryDatabase(Guid.NewGuid().ToString()));
+            services.AddDbContext<DakiDbContext>(builder => builder.UseInMemoryDatabase("Auth"));
 
-            services.AddIdentity<AppUser, IdentityRole>()
+            services.AddIdentity<AppUser, IdentityRole>(options =>
+                {
+                    options.Password.RequireDigit = false;
+                    options.Password.RequireLowercase = true;
+                    options.Password.RequireNonAlphanumeric = false;
+                    options.Password.RequireUppercase = false;
+                })
                 .AddEntityFrameworkStores<DakiDbContext>()
                 .AddDefaultTokenProviders();
 
@@ -48,7 +54,7 @@ namespace DakiHunt.Api
                 {
                     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                     options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;                  
                 })
                 .AddJwtBearer(cfg =>
                 {
@@ -62,6 +68,9 @@ namespace DakiHunt.Api
                         ClockSkew = TimeSpan.Zero // remove delay of token when expire
                     };
                 });
+
+            services.AddCors(options =>
+                options.AddPolicy("GlobalPolicy", builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -79,6 +88,7 @@ namespace DakiHunt.Api
             app.UseAuthentication();
             app.UseHttpsRedirection();
             app.UseMvc();
+            app.UseCors();
 
             //
             dbContext.Database.EnsureCreated();

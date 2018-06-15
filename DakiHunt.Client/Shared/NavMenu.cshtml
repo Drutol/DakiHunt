@@ -1,4 +1,6 @@
-﻿<div class="top-row pl-4 navbar navbar-dark">
+﻿@inherits DakiHunt.Client.Components.NavMenuBase
+
+<div class="top-row pl-4 navbar navbar-dark">
     <a class="navbar-brand" href="">DakiHunt</a>
     <button class="navbar-toggler" onclick=@ToggleNavMenu>
         <span class="navbar-toggler-icon"></span>
@@ -13,8 +15,18 @@
             </NavLink>
         </li>
         <li class="nav-item px-3">
-            <NavLink class="nav-link" href="auth">
-                <span class="oi oi-account-login" aria-hidden="true"></span> Sign in
+            <NavLink class="nav-link" href="signIn">
+                <span class="oi oi-account-login" aria-hidden="true"/> Sign in
+            </NavLink>
+        </li>    
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="register">
+                <span class="oi oi-elevator" aria-hidden="true"/> Register
+            </NavLink>
+        </li>    
+        <li class="nav-item px-3" style="display:@(AuthorizationProvider.IsAuthorized ? "block" : "none")">
+            <NavLink class="nav-link" href="profile">
+                <spa n class="oi oi-person" aria-hidden="true"/> Profile
             </NavLink>
         </li>
     </ul>

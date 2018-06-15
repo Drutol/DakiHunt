@@ -1,6 +1,6 @@
 ﻿@using DakiHunt.Models.ViewModels
-@inherits DakiHunt.Client.Components.AuthPageBase
-@page "/auth"
+@inherits DakiHunt.Client.Components.Auth.SignInPageBase
+@page "/signIn"
 
 <form>
     <div class="form-group">
@@ -13,10 +13,11 @@
         <input bind="@SignInViewModel.Password" id="Password" type="password" class="form-control" />
         <ValidationError Errors="@Errors" FieldName="Password" />
     </div>
+    <div class="form-group">
+        <button onclick="@(async () => await SignIn())" type="button" class="btn btn-default">Log in</button>
+        <a href="/account/forgotPassword">Forgot your password?</a>
+    </div>
 </form>
-<div class="form-group">
-    <button onclick="@(async () => await SignIn())" class="btn btn-default">Log in</button>
-    <a href="/account/forgotPassword">Forgot your password?</a>
-</div>
+
 
 

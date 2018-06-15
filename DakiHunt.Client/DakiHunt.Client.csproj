@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Blazor.Extensions.Logging" Version="0.1.2" />
     <PackageReference Include="Blazor.Extensions.Storage" Version="0.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Blazor.Browser" Version="0.4.0" />
     <PackageReference Include="Microsoft.AspNetCore.Blazor.Build" Version="0.4.0" />
@@ -17,7 +18,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="Pages\Auth.cshtml">
+    <Content Update="Pages\Auth\Register.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Pages\Auth\SignIn.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
   </ItemGroup>

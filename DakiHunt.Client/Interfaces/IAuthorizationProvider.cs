@@ -9,6 +9,9 @@ namespace DakiHunt.Client.Interfaces
 {
     public interface IAuthorizationProvider
     {
+        bool IsAuthorized { get; }
+        event EventHandler<bool> OnAuthStatusChanged;
+
         Task<bool> SignIn(SignInViewModel signInViewModel);
         Task<bool> Register(RegisterViewModel registerViewModel);
         Task<HttpClient> ObtainAuthenticatedHttpClient();

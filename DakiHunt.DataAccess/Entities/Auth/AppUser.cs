@@ -7,6 +7,6 @@ namespace DakiHunt.DataAccess.Entities.Auth
 {
     public class AppUser : IdentityUser
     {
-
+        public string RefreshToken { get; set; }
     }
 }
