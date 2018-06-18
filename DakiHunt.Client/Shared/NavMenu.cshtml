@@ -2,32 +2,37 @@
 
 <div class="top-row pl-4 navbar navbar-dark">
     <a class="navbar-brand" href="">DakiHunt</a>
-    <button class="navbar-toggler" onclick=@ToggleNavMenu>
+    <button class="navbar-toggler" onclick="@ToggleNavMenu">
         <span class="navbar-toggler-icon"></span>
     </button>
 </div>
 
-<div class=@(collapseNavMenu ? "collapse" : null) onclick=@ToggleNavMenu>
+<div class=@(collapseNavMenu ? "collapse" : null) onclick="@ToggleNavMenu">
     <ul class="nav flex-column">
         <li class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match=NavLinkMatch.All>
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
                 <span class="oi oi-home" aria-hidden="true"></span> Home
             </NavLink>
         </li>
-        <li class="nav-item px-3">
+        <li class="nav-item px-3" style="display: @(AuthorizationProvider.IsAuthorized ? "none" : "block")">
             <NavLink class="nav-link" href="signIn">
                 <span class="oi oi-account-login" aria-hidden="true"/> Sign in
             </NavLink>
-        </li>    
-        <li class="nav-item px-3">
+        </li>
+        <li class="nav-item px-3" style="display: @(AuthorizationProvider.IsAuthorized ? "none" : "block")">
             <NavLink class="nav-link" href="register">
                 <span class="oi oi-elevator" aria-hidden="true"/> Register
             </NavLink>
-        </li>    
-        <li class="nav-item px-3" style="display:@(AuthorizationProvider.IsAuthorized ? "block" : "none")">
+        </li>
+        <li class="nav-item px-3" style="display: @(AuthorizationProvider.IsAuthorized ? "block" : "none")">
             <NavLink class="nav-link" href="profile">
-                <spa n class="oi oi-person" aria-hidden="true"/> Profile
+                <span class="oi oi-person" aria-hidden="true"/> Profile
             </NavLink>
+        </li>
+        <li class="nav-item px-3" style="display: @(AuthorizationProvider.IsAuthorized ? "block" : "none")">
+            <a class="nav-link" href="#" onclick="@(() => SignOut())">
+                <span class="oi oi-account-logout" aria-hidden="true"/> Log out
+            </a>
         </li>
     </ul>
 </div>
@@ -39,4 +44,5 @@
     {
         collapseNavMenu = !collapseNavMenu;
     }
+
 }

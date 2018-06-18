@@ -19,6 +19,7 @@ namespace DakiHunt.Client
                 services.AddStorage();
                 services.AddSingleton<IApiCommunicator,ApiCommunicator>();
                 services.AddSingleton<IAuthorizationProvider,AuthorizationProvider>();
+                services.AddSingleton<IMessageBoxProvider,MessageBoxProvider>();
                 services.AddSingleton<AppVariables>();
                 services.AddLogging(builder => builder.AddBrowserConsole().SetMinimumLevel(LogLevel.Information));
             });

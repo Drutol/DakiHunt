@@ -43,6 +43,9 @@ namespace DakiHunt.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> Login([FromBody] SignInDto model)
         {
+            if (model == null || string.IsNullOrEmpty(model.Password) || string.IsNullOrEmpty(model.Username))
+                return BadRequest();
+
             var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, false, false);
 
             if (result.Succeeded)
@@ -53,7 +56,7 @@ namespace DakiHunt.Api.Controllers
                 return Ok(GenerateJwtToken(user));
             }
 
-            return Forbid(result.ToString());
+            return Unauthorized();
         }
 
         [HttpPost]

@@ -12,6 +12,7 @@ using DakiHunt.Models.Dtos;
 using DakiHunt.Models.ViewModels;
 using Microsoft.AspNetCore.Blazor;
 using Microsoft.AspNetCore.Blazor.Browser.Http;
+using Microsoft.AspNetCore.Blazor.Services;
 using Microsoft.Extensions.Logging;
 
 namespace DakiHunt.Client.BL
@@ -74,6 +75,8 @@ namespace DakiHunt.Client.BL
                     Token = token;
 
                     _logger.LogInformation("SignIn success.");
+
+                    return true;
                 }
                 catch (WebException e)
                 {
@@ -89,7 +92,7 @@ namespace DakiHunt.Client.BL
                 }
             }
 
-            return true;
+            return false;
         }
 
         public async Task<bool> Register(RegisterViewModel registerViewModel)
@@ -107,6 +110,8 @@ namespace DakiHunt.Client.BL
                     Token = token;
 
                     _logger.LogInformation("Register success.");
+
+                    return true;
                 }
                 catch (WebException e)
                 {
@@ -122,7 +127,7 @@ namespace DakiHunt.Client.BL
                 }
             }
 
-            return true;
+            return false;
         }
 
         private async Task<TokenModel> RequestRefreshToken()
@@ -235,6 +240,13 @@ namespace DakiHunt.Client.BL
             _initialized = true;
             _initializing = false;
             _initSemaphore.Release(int.MaxValue);
+        }
+
+        public void SignOut()
+        {
+            Token = null;
+            IsAuthorized = false;
+            _authenticatedHttpClient = null;
         }
     }
 }

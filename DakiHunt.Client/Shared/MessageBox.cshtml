@@ -1,0 +1,29 @@
+﻿@inherits DakiHunt.Client.Shared.Bases.MessageBoxBase
+
+<DynamicElement>
+    <div class="modal fade @(IsOpen ? "show" : "")" style="display: @(IsOpen ? "block" : "none")" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"@(IsOpen ? "aria-hidden=\"true\"" : "")>
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">@Title</h5>
+                    <button onclick="@(() => OnCancelClick())" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    @Content
+                </div>
+                <div class="modal-footer">
+                    <button onclick="@(() => OnSecondaryClick())" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button onclick="@(() => OnPrimaryClick())" type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</DynamicElement>
+
+
+@if (IsOpen)
+{
+    <div onclick="@(() => OnBackgroundClick())" class="modal-backdrop fade show"></div>
+}

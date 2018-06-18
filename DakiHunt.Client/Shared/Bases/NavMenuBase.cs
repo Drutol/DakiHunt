@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using DakiHunt.Client.Interfaces;
 using Microsoft.AspNetCore.Blazor.Components;
+using Microsoft.AspNetCore.Blazor.Services;
 
 namespace DakiHunt.Client.Components
 {
@@ -11,6 +12,9 @@ namespace DakiHunt.Client.Components
     {
         [Inject]
         public IAuthorizationProvider AuthorizationProvider { get; set; }
+
+        [Inject]
+        private IUriHelper UriHelper { get; set; }
 
         protected override void OnInit()
         {
@@ -21,6 +25,12 @@ namespace DakiHunt.Client.Components
         private void AuthorizationProviderOnOnAuthStatusChanged(object sender, bool e)
         {
             StateHasChanged();
+        }
+
+        protected void SignOut()
+        {
+            AuthorizationProvider.SignOut();
+            UriHelper.NavigateTo("/");
         }
     }
 }

@@ -15,5 +15,7 @@ namespace DakiHunt.Client.Interfaces
         Task<bool> SignIn(SignInViewModel signInViewModel);
         Task<bool> Register(RegisterViewModel registerViewModel);
         Task<HttpClient> ObtainAuthenticatedHttpClient();
+
+        void SignOut();
     }
 }
