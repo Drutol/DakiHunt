@@ -25,13 +25,13 @@ namespace DakiHunt.Api.Controllers
     [Route("[controller]/[action]")]
     public class AccountController : Controller
     {
-        private readonly SignInManager<AppUser> _signInManager;
-        private readonly UserManager<AppUser> _userManager;
+        private readonly SignInManager<AuthUser> _signInManager;
+        private readonly UserManager<AuthUser> _userManager;
         private readonly IConfiguration _configuration;
 
         public AccountController(
-            UserManager<AppUser> userManager,
-            SignInManager<AppUser> signInManager,
+            UserManager<AuthUser> userManager,
+            SignInManager<AuthUser> signInManager,
             IConfiguration configuration
             )
         {
@@ -62,7 +62,7 @@ namespace DakiHunt.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> Register([FromBody] RegisterDto model)
         {
-            var user = new AppUser
+            var user = new AuthUser
             {
                 Email = model.Email,
                 UserName = model.Username,
@@ -107,13 +107,13 @@ namespace DakiHunt.Api.Controllers
             return Guid.NewGuid().ToString();
         }
 
-        private TokenModel GenerateJwtToken(AppUser user)
+        private TokenModel GenerateJwtToken(AuthUser user)
         {
             var claims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Email),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(ClaimTypes.NameIdentifier, user.Id)
+                new Claim(ClaimTypes.NameIdentifier, user.UserName)
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));

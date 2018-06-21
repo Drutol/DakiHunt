@@ -4,6 +4,9 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
+using DakiHunt.Api.Composition;
 using DakiHunt.DataAccess.Database;
 using DakiHunt.DataAccess.Entities.Auth;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -31,21 +34,25 @@ namespace DakiHunt.Api
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc().AddControllersAsServices().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            services.AddDbContext<DakiDbContext>(builder => builder.UseInMemoryDatabase("Auth"));
+            services.AddDbContext<DakiAccDbContext>(builder => builder.UseInMemoryDatabase("Auth"));
+            services.AddDbContext<DakiDbContext>(builder => builder.UseInMemoryDatabase("Daki"));
 
-            services.AddIdentity<AppUser, IdentityRole>(options =>
+            services.AddIdentity<AuthUser, IdentityRole>(options =>
                 {
                     options.Password.RequireDigit = false;
                     options.Password.RequireLowercase = true;
                     options.Password.RequireNonAlphanumeric = false;
                     options.Password.RequireUppercase = false;
                 })
-                .AddEntityFrameworkStores<DakiDbContext>()
+                .AddEntityFrameworkStores<DakiAccDbContext>()
                 .AddDefaultTokenProviders();
+
+            services.AddCors(options =>
+                options.AddPolicy("GlobalPolicy", builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
 
             // ===== Add Jwt Authentication ========
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear(); // => remove default claims
@@ -69,12 +76,16 @@ namespace DakiHunt.Api
                     };
                 });
 
-            services.AddCors(options =>
-                options.AddPolicy("GlobalPolicy", builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
+            var containerBuilder = new ContainerBuilder();
+
+            containerBuilder.RegisterDependencies();
+            containerBuilder.Populate(services);
+
+            return new AutofacServiceProvider(containerBuilder.Build());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, DakiDbContext dbContext)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, DakiAccDbContext accDbContext, DakiDbContext dakiDbContext)
         {
             if (env.IsDevelopment())
             {
@@ -91,7 +102,8 @@ namespace DakiHunt.Api
             app.UseCors();
 
             //
-            dbContext.Database.EnsureCreated();
+            accDbContext.Database.EnsureCreated();
+            dakiDbContext.Database.EnsureCreated();
         }
     }
 }
