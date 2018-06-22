@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Text;
 using DakiHunt.DataAccess.Entities;
 using DakiHunt.DataAccess.Interfaces.Service;
+using DakiHunt.DataAccess.Interfaces.Service.Base;
 using Microsoft.EntityFrameworkCore;
 
 namespace DakiHunt.DataAccess.Database
@@ -17,6 +18,9 @@ namespace DakiHunt.DataAccess.Database
         }
 
         public DbSet<AppUser> Users { get; set; }
+        public DbSet<Hunt> Hunts { get; set; }
+        public DbSet<HuntDomain> HuntDomains { get; set; }
+        public DbSet<HuntTimeTrigger> HuntTimeTriggers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 using System.Threading.Tasks;
 using DakiHunt.DataAccess.Database;
-using DakiHunt.DataAccess.Interfaces;
+using DakiHunt.DataAccess.Interfaces.Service.Base;
 using Microsoft.EntityFrameworkCore;
 
-namespace DakiHunt.DataAccess.Services
+namespace DakiHunt.DataAccess.Services.Base
 {
     public abstract partial class ServiceBase<TEntity, TService> : IServiceBase<TEntity, TService>
         where TService : class, IServiceBase<TEntity, TService>

@@ -5,6 +5,7 @@ using System;
 using Blazor.Extensions.Logging;
 using Blazor.Extensions.Storage;
 using DakiHunt.Client.BL;
+using DakiHunt.Client.BL.Api;
 using DakiHunt.Client.Interfaces;
 using Microsoft.Extensions.Logging;
 

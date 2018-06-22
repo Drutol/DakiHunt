@@ -5,6 +5,7 @@ using DakiHunt.DataAccess.Database;
 using DakiHunt.DataAccess.Entities;
 using DakiHunt.DataAccess.Interfaces;
 using DakiHunt.DataAccess.Interfaces.Service;
+using DakiHunt.DataAccess.Services.Base;
 
 namespace DakiHunt.DataAccess.Services
 {

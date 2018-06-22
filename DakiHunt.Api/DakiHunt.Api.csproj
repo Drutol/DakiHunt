@@ -14,10 +14,12 @@
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Cors" Version="2.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="2.1.0" />
+    <PackageReference Include="Quartz" Version="3.0.5" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\DakiHunt.DataAccess\DakiHunt.DataAccess.csproj" />
+    <ProjectReference Include="..\DakiHunt.Interfaces\DakiHunt.Interfaces.csproj" />
     <ProjectReference Include="..\DakiHunt.Models\DakiHunt.Models.csproj" />
   </ItemGroup>
 

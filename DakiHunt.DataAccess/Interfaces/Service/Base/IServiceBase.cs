@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace DakiHunt.DataAccess.Interfaces
+namespace DakiHunt.DataAccess.Interfaces.Service.Base
 {
     public interface IServiceBase<TEntity, TService> : IDisposable
         where TEntity : class

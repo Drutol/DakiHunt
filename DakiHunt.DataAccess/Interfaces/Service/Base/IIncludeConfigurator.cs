@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DakiHunt.DataAccess.Interfaces
+﻿namespace DakiHunt.DataAccess.Interfaces.Service.Base
 {
     public interface IIncludeConfigurator<TEntity, TService>
         where TEntity : class

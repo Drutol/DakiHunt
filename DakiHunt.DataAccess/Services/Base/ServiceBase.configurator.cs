@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using DakiHunt.DataAccess.Interfaces;
+﻿using System.Linq;
+using DakiHunt.DataAccess.Interfaces.Service.Base;
 
-namespace DakiHunt.DataAccess.Services
+namespace DakiHunt.DataAccess.Services.Base
 {
     public abstract partial class ServiceBase<TEntity, TService> : IServiceBase<TEntity, TService>
         where TService : class, IServiceBase<TEntity, TService>

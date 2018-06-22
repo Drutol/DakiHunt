@@ -98,7 +98,7 @@ namespace DakiHunt.Api
 
             app.UseAuthentication();
             app.UseHttpsRedirection();
-            app.UseMvc();
+            app.UseMvc(routes => { routes.MapRoute("default", "{controller}/{action}/{id?}"); });
             app.UseCors();
 
             //

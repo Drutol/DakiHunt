@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -10,12 +9,10 @@ using DakiHunt.Client.Utils;
 using DakiHunt.Models.Auth;
 using DakiHunt.Models.Dtos;
 using DakiHunt.Models.ViewModels;
-using Microsoft.AspNetCore.Blazor;
 using Microsoft.AspNetCore.Blazor.Browser.Http;
-using Microsoft.AspNetCore.Blazor.Services;
 using Microsoft.Extensions.Logging;
 
-namespace DakiHunt.Client.BL
+namespace DakiHunt.Client.BL.Api
 {
     public class AuthorizationProvider : IAuthorizationProvider
     {

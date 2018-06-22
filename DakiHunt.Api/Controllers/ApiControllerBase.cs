@@ -41,7 +41,7 @@ namespace DakiHunt.Api.Controllers
                 return _currentUser;
 
             var authUser = await GetCurrrentAuthUser();
-            _currentUser = await _userService.FirstAsync(user => user.Id.Equals(authUser.Id));
+            _currentUser = await _userService.FirstAsync(user => user.AuthUserKey.Equals(authUser.Id));
 
             return _currentUser;
         }

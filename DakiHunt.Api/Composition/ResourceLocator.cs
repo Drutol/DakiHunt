@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
+using DakiHunt.Api.BL;
+using DakiHunt.Api.BL.Crawlers;
 using DakiHunt.DataAccess.Interfaces.Service;
 using DakiHunt.DataAccess.Services;
+using DakiHunt.Interfaces;
 
 namespace DakiHunt.Api.Composition
 {
@@ -18,7 +21,13 @@ namespace DakiHunt.Api.Composition
         {
             builder.RegisterBuildCallback(BuildCallback);
 
+            //Services
             builder.RegisterType<UserService>().As<IUserService>();
+            builder.RegisterType<HuntService>().As<IHuntService>();
+
+            //Singletons
+            builder.RegisterType<DomainMonitor>().As<IDomainMonitor>().SingleInstance();
+            builder.RegisterType<SurugayaCrawler>().As<IDomainCrawler>().SingleInstance();
 
         }
 
