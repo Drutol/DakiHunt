@@ -43,7 +43,7 @@ namespace DakiHunt.Api.BackgroundTasks
                                     using (await monitor.WaitForDomainAccess(huntedItemsWithinDomain.Key))
                                     {
                                         var crawler = crawlers.First(domainCrawler =>
-                                            domainCrawler.HandledDomain == hunt.HuntedItem.Domain.DomainUri);
+                                            domainCrawler.HandledDomain == hunt.HuntedItem.Domain.Uri);
                                     }
                                 }));
                            }     

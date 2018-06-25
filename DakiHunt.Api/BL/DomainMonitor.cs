@@ -16,12 +16,12 @@ namespace DakiHunt.Api.BL
 
         public async Task<IDisposable> WaitForDomainAccess(HuntDomain domain)
         {
-            if (!_domainSemaphoreDictionary.ContainsKey(domain.DomainUri))
+            if (!_domainSemaphoreDictionary.ContainsKey(domain.Uri))
             {
-                _domainSemaphoreDictionary.TryAdd(domain.DomainUri, new SemaphoreSlim(1));
+                _domainSemaphoreDictionary.TryAdd(domain.Uri, new SemaphoreSlim(1));
             }
 
-            var semaphore = _domainSemaphoreDictionary[domain.DomainUri];
+            var semaphore = _domainSemaphoreDictionary[domain.Uri];
             await semaphore.WaitAsync();
             return new DomainScopeLifetime(semaphore);
         }

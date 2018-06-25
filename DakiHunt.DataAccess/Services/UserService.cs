@@ -11,7 +11,7 @@ namespace DakiHunt.DataAccess.Services
 {
     public class UserService : ServiceBase<AppUser,IUserService> , IUserService
     {
-        public UserService(DakiDbContext dbContext, bool saveOnDispose) : base(dbContext, saveOnDispose)
+        public UserService(DakiDbContext dbContext) : base(dbContext)
         {
 
         }

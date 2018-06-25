@@ -36,7 +36,7 @@ namespace DakiHunt.DataAccess.Database
         {
             return Assembly.GetAssembly(typeof(DakiDbContext))
                 .GetTypes()
-                .Where(t => t.IsClass && t.IsAssignableFrom(typeof(IModelWithRelation)));
+                .Where(t => t.IsClass && t.GetTypeInfo().ImplementedInterfaces.Contains(typeof(IModelWithRelation)));
         }
     }
 }

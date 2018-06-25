@@ -47,11 +47,12 @@ namespace DakiHunt.Api.Controllers
                 return BadRequest();
 
             var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, false, false);
-
+            
             if (result.Succeeded)
             {
-                var user = _userManager.Users.SingleOrDefault(r => r.UserName == model.Username);
-                user.RefreshToken = GenerateRefreshToken();
+                var user = _userManager.Users.SingleOrDefault(r => r.UserName.Equals(model.Username,StringComparison.CurrentCultureIgnoreCase));
+                user.RefreshToken = GenerateRefreshToken(user);
+                user.LockoutEnabled = false;
                 await _userManager.UpdateAsync(user);
                 return Ok(GenerateJwtToken(user));
             }
@@ -71,7 +72,7 @@ namespace DakiHunt.Api.Controllers
 
             if (result.Succeeded)
             {
-                user.RefreshToken = GenerateRefreshToken();
+                user.RefreshToken = GenerateRefreshToken(user);
                 await _userManager.UpdateAsync(user);
                 await _signInManager.SignInAsync(user, false);
                 return Ok(GenerateJwtToken(user));
@@ -89,11 +90,19 @@ namespace DakiHunt.Api.Controllers
                 refreshToken = await reader.ReadToEndAsync();
             }
 
+            AuthUser user = null;
+#if DEBUG
+            if (refreshToken == AuthUser.DebugRefreshToken)
+            {
+                user = _userManager.Users.FirstOrDefault(authUser => authUser.UserName == AuthUser.DebugUsername);
+            }
+#else
             var user = _userManager.Users.FirstOrDefault(appUser => appUser.RefreshToken == refreshToken);
+#endif
 
             if (user != null)
             {
-                user.RefreshToken = GenerateRefreshToken();
+                user.RefreshToken = GenerateRefreshToken(user);
                 await _userManager.UpdateAsync(user);
                 await _signInManager.SignInAsync(user, false);
                 return Ok(GenerateJwtToken(user));
@@ -102,9 +111,13 @@ namespace DakiHunt.Api.Controllers
             return Forbid();
         }
 
-        private string GenerateRefreshToken()
+        private string GenerateRefreshToken(AuthUser user)
         {
+#if DEBUG
+            return user.DebugUser ? AuthUser.DebugRefreshToken : Guid.NewGuid().ToString();
+#else
             return Guid.NewGuid().ToString();
+#endif
         }
 
         private TokenModel GenerateJwtToken(AuthUser user)
@@ -113,7 +126,7 @@ namespace DakiHunt.Api.Controllers
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Email),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(ClaimTypes.NameIdentifier, user.UserName)
+                new Claim(ClaimTypes.NameIdentifier, user.Id)
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));

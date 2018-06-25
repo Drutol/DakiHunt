@@ -12,8 +12,9 @@ namespace DakiHunt.DataAccess.Services
 {
     public class HuntService : ServiceBase<Hunt,IHuntService> , IHuntService
     {
-        public HuntService(DakiDbContext dbContext, bool saveOnDispose) : base(dbContext, saveOnDispose)
+        public HuntService(DakiDbContext dbContext) : base(dbContext)
         {
+
         }
 
         public async Task<List<Hunt>> GetAllWithIds(IEnumerable<long> ids)

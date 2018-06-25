@@ -2,17 +2,33 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
+using DakiHunt.DataAccess.Interfaces.Service.Base;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DakiHunt.DataAccess.Entities
 {
-    public class HuntDomain
+    public class HuntDomain : IModelWithRelation
     {
         public long Id { get; set; }
 
-        public string Name { get; set; }
-        public Uri DomainUri { get; set; }
+        public string Name { get; set; }  
+        public Uri Uri { get; set; }
 
         public ICollection<DakiItem> Items { get; set; }
+
+        public static void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.ApplyConfiguration(new DbConfiguration());
+        }
+
+        class DbConfiguration : IEntityTypeConfiguration<HuntDomain>
+        {
+            public void Configure(EntityTypeBuilder<HuntDomain> builder)
+            {
+                builder.Property(domain => domain.Uri).HasConversion(uri => uri.ToString(), s => new Uri(s));
+            }
+        }
 
         #region EqualityComparer
 

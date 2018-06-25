@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Autofac;
 using DakiHunt.Api.BL;
 using DakiHunt.Api.BL.Crawlers;
+using DakiHunt.DataAccess;
+using DakiHunt.DataAccess.Interfaces;
 using DakiHunt.DataAccess.Interfaces.Service;
 using DakiHunt.DataAccess.Services;
 using DakiHunt.Interfaces;
@@ -28,6 +30,7 @@ namespace DakiHunt.Api.Composition
             //Singletons
             builder.RegisterType<DomainMonitor>().As<IDomainMonitor>().SingleInstance();
             builder.RegisterType<SurugayaCrawler>().As<IDomainCrawler>().SingleInstance();
+            builder.RegisterType<DbInitializer>().As<IDbInitializer>().SingleInstance();
 
         }
 

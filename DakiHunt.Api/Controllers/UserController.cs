@@ -26,7 +26,7 @@ namespace DakiHunt.Api.Controllers
         [ActionName("me")]
         public async Task<IActionResult> GetMyInfo()
         {
-            var user = await CurrentAuthUser;
+            var user = await _userManager.GetUserAsync(HttpContext.User);
 
             return Ok(user.Email);
         }

@@ -13,16 +13,14 @@ namespace DakiHunt.DataAccess.Services.Base
         where TService : class, IServiceBase<TEntity, TService>
         where TEntity : class
     {
-        private readonly bool _saveOnDispose;
 
         protected DakiDbContext Context { get; private set; }
        
         private EntityIncludeDelegate<TEntity> _includeOverride;
 
-        public ServiceBase(DakiDbContext dbContext, bool saveOnDispose) : base()
+        public ServiceBase(DakiDbContext dbContext)
         {
             Context = dbContext;
-            _saveOnDispose = saveOnDispose;
         }
 
         private IQueryable<TEntity> InternalInclude(IQueryable<TEntity> query)
@@ -36,8 +34,6 @@ namespace DakiHunt.DataAccess.Services.Base
         {
             return query;
         }
-
-
 
         public List<TEntity> GetAll()
         {
@@ -112,8 +108,8 @@ namespace DakiHunt.DataAccess.Services.Base
             {
                 if (Context == null)
                     return;
-                if (_saveOnDispose)
-                    Context.SaveChanges();
+
+                Context.SaveChanges();
                 Context.Dispose();
             }
             catch (ObjectDisposedException)
