@@ -17,7 +17,7 @@ namespace DakiHunt.DataAccess.Entities
         public HuntDomain Domain { get; set; }
 
         public ICollection<Hunt> Hunts { get; set; }
-        public ICollection<DakiItemHistoryEvent> HistoryEvents { get; set; }
+        public ICollection<DakiItemHistoryEntry> HistoryStates { get; set; }
 
         public static void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -26,7 +26,7 @@ namespace DakiHunt.DataAccess.Entities
                 .WithMany(domain => domain.Items);
 
             modelBuilder.Entity<DakiItem>()
-                .HasMany(item => item.HistoryEvents)
+                .HasMany(item => item.HistoryStates)
                 .WithOne(historyEvent => historyEvent.Item);
         }
     }

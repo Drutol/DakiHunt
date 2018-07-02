@@ -7,8 +7,8 @@ using DakiHunt.DataAccess.Interfaces.Service.Base;
 
 namespace DakiHunt.DataAccess.Interfaces.Service
 {
-    public interface IHuntService : IServiceBase<Hunt,IHuntService>
+    public interface IHuntService : IServiceBase<Entities.Hunt,IHuntService>
     {
-        Task<List<Hunt>> GetAllWithIds(IEnumerable<long> ids);
+        Task<List<Entities.Hunt>> GetAllWithIds(IEnumerable<long> ids);
     }
 }

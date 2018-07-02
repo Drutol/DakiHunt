@@ -20,6 +20,11 @@ namespace DakiHunt.DataAccess.Entities
         public DakiItem HuntedItem { get; set; }
         public HuntTimeTrigger TimeTrigger { get; set; }
 
+        public bool IsActive { get; set; }
+        public bool IsFinished { get; set; }
+
+        public ICollection<HuntEvent> HistoryEvents { get; set; }
+
         public Type HuntType { get; set; }
         
         public static void OnModelCreating(ModelBuilder modelBuilder)
@@ -31,6 +36,10 @@ namespace DakiHunt.DataAccess.Entities
             modelBuilder.Entity<Hunt>()
                 .HasOne(hunt => hunt.HuntedItem)
                 .WithMany(item => item.Hunts);
+
+            modelBuilder.Entity<Hunt>()
+                .HasMany(hunt => hunt.HistoryEvents)
+                .WithOne(e => e.Hunt);
         }
     }
 }

@@ -22,6 +22,7 @@ namespace DakiHunt.Api.BackgroundTasks
             using (var scope = ResourceLocator.ObtainLifetimeScope())
             {
                 var crawlers = scope.Resolve<IEnumerable<IDomainCrawler>>();
+                var searchCrawlers = scope.Resolve<IEnumerable<IDomainSearchCrawler>>();
                 var monitor = scope.Resolve<IDomainMonitor>();
                 using (var huntService = scope.Resolve<IHuntService>())
                 {
@@ -42,8 +43,7 @@ namespace DakiHunt.Api.BackgroundTasks
                                 {
                                     using (await monitor.WaitForDomainAccess(huntedItemsWithinDomain.Key))
                                     {
-                                        var crawler = crawlers.First(domainCrawler =>
-                                            domainCrawler.HandledDomain == hunt.HuntedItem.Domain.Uri);
+                                        await ProcessItemUpdate(crawlers,searchCrawlers, hunt);
                                     }
                                 }));
                            }     
@@ -51,6 +51,36 @@ namespace DakiHunt.Api.BackgroundTasks
                         await Task.WhenAll(updateTasks);
                     }
                 }                           
+            }
+        }
+
+
+        private async Task ProcessItemUpdate(IEnumerable<IDomainCrawler> crawlers,
+            IEnumerable<IDomainSearchCrawler> searchCrawlers, Hunt hunt)
+        {
+            if (hunt.HuntType == Hunt.Type.SingleItem)
+            {
+                var crawler = crawlers.First(domainCrawler =>
+                    domainCrawler.HandledDomain == hunt.HuntedItem.Domain.Uri);
+
+                var currentState = await crawler.ObtainItemState(hunt);
+                
+                if (currentState != null)
+                {
+                    var lastState = hunt.HuntedItem.HistoryStates.Last();
+                    if (currentState.DiffWithPrevious(lastState))
+                    {
+                        hunt.HuntedItem.HistoryStates.Add(currentState);                        
+                    }
+                }
+                else //it means it faulted, log was created in crawler
+                {
+                    
+                }
+            }
+            else
+            {
+
             }
         }
     }

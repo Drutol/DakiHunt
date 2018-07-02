@@ -7,13 +7,11 @@ using DakiHunt.Interfaces;
 
 namespace DakiHunt.Api.BL.Crawlers
 {
-    public class SurugayaCrawler : IDomainCrawler
+    public class SurugayaSearchCrawler : IDomainSearchCrawler
     {
-        public Uri HandledDomain { get; }
+        public Uri HandledDomain { get; } = new Uri("https://www.suruga-ya.jp");
 
-        public Hunt.Type HandledHunt { get; } = Hunt.Type.SingleItem;
-
-        public Task<DakiItemHistoryEvent> ObtainItemState()
+        public Task<DakiItemSearchHistoryEntry> ObtainItemState()
         {
             throw new NotImplementedException();
         }

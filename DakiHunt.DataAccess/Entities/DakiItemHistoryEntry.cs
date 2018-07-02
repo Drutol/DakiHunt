@@ -4,7 +4,7 @@ using System.Text;
 
 namespace DakiHunt.DataAccess.Entities
 {
-    public class DakiItemHistoryEvent
+    public class DakiItemHistoryEntry
     {
         public long Id { get; set; }
 
@@ -20,7 +20,7 @@ namespace DakiHunt.DataAccess.Entities
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public bool DiffWithPrevious(DakiItemHistoryEvent other)
+        public bool DiffWithPrevious(DakiItemHistoryEntry other)
         {
             if (Price == other.Price && IsAvailable == other.IsAvailable)
                 return false;

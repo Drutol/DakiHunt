@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DakiHunt.Interfaces;
 
-namespace DakiHunt.Api.BL.Crawlers
+namespace DakiHunt.Api.BL
 {
-    public class SurugayaSearchCrawler
+    public class NotificationManager : INotificationManager
     {
     }
 }

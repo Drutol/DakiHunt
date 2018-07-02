@@ -9,12 +9,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="BL\Crawlers\Mandarake\" />
+    <Folder Include="BL\Crawlers\Mercari\" />
+    <Folder Include="BL\Crawlers\Yahoo\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Autofac" Version="4.8.1" />
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.2.2" />
+    <PackageReference Include="HtmlAgilityPack" Version="1.8.4" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Cors" Version="2.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="2.1.1" />

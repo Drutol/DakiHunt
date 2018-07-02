@@ -18,6 +18,8 @@ namespace DakiHunt.DataAccess.Entities
 
         public ICollection<Hunt> Hunts { get; set; }
 
+        public string PushNotificationToken { get; set; }
+
         public static void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<AppUser>()

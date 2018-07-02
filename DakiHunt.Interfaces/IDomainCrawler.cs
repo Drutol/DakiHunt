@@ -10,6 +10,7 @@ namespace DakiHunt.Interfaces
     {
         Uri HandledDomain { get; }
 
-        Task<DakiItemHistoryEvent> ObtainItemState();
+        Task<DakiItemHistoryEntry> ObtainItemState(Hunt hunt);
+        bool ValidateUrl(Uri uri);
     }
 }

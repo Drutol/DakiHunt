@@ -10,10 +10,9 @@ using Newtonsoft.Json;
 
 namespace DakiHunt.DataAccess.Entities
 {
-    public class DakiItemSearchHistoryEvent : IModelWithRelation
+    public class DakiItemSearchHistoryEntry : IModelWithRelation
     {
         private Lazy<List<DakiItemSearchResultEntry>> _results;
-
 
         public long Id { get; set; }
 
@@ -34,7 +33,7 @@ namespace DakiHunt.DataAccess.Entities
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public bool DiffWithPrevious(DakiItemSearchHistoryEvent other)
+        public bool DiffWithPrevious(DakiItemSearchHistoryEntry other)
         {
             var diff = Results.Value.Diff(other.Results.Value, (x, y) => x.Identifier == y.Identifier,
                 (x, y) => x.Price == y.Price && x.IsAvailable == y.IsAvailable);
@@ -50,7 +49,7 @@ namespace DakiHunt.DataAccess.Entities
 
         public static void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<DakiItemSearchHistoryEvent>()
+            modelBuilder.Entity<DakiItemSearchHistoryEntry>()
                 .Property(e => e.Results)
                 .HasColumnType("jsonb");
         }

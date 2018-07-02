@@ -26,7 +26,6 @@ namespace DakiHunt.Api.BL
             return new DomainScopeLifetime(semaphore);
         }
 
-
         private class DomainScopeLifetime : IDisposable
         {
             private readonly SemaphoreSlim _semaphore;

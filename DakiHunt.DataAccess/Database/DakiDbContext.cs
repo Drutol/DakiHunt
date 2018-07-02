@@ -18,7 +18,7 @@ namespace DakiHunt.DataAccess.Database
         }
 
         public DbSet<AppUser> Users { get; set; }
-        public DbSet<Hunt> Hunts { get; set; }
+        public DbSet<Entities.Hunt> Hunts { get; set; }
         public DbSet<HuntDomain> HuntDomains { get; set; }
         public DbSet<HuntTimeTrigger> HuntTimeTriggers { get; set; }
 

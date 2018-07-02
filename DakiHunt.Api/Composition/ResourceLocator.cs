@@ -30,8 +30,11 @@ namespace DakiHunt.Api.Composition
 
             //Singletons
             builder.RegisterType<DomainMonitor>().As<IDomainMonitor>().SingleInstance();
-            builder.RegisterType<SurugayaCrawler>().As<IDomainCrawler>().SingleInstance();
+           
             builder.RegisterType<DbInitializer>().As<IDbInitializer>().SingleInstance();
+            //Crawlers
+            builder.RegisterType<SurugayaCrawler>().As<IDomainCrawler>().SingleInstance();
+            builder.RegisterType<SurugayaSearchCrawler>().As<IDomainSearchCrawler>().SingleInstance();
 
         }
 
