@@ -26,6 +26,7 @@ namespace DakiHunt.Api.Composition
             //Services
             builder.RegisterType<UserService>().As<IUserService>();
             builder.RegisterType<HuntService>().As<IHuntService>();
+            builder.RegisterType<UserPropertiesService>().As<IAccountPropertiesService>();
 
             //Singletons
             builder.RegisterType<DomainMonitor>().As<IDomainMonitor>().SingleInstance();

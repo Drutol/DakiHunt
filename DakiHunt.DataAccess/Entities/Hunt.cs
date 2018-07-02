@@ -11,7 +11,7 @@ namespace DakiHunt.DataAccess.Entities
         public enum Type
         {
             SingleItem,
-            ItemGroup
+            Search
         }
 
         public long Id { get; set; }

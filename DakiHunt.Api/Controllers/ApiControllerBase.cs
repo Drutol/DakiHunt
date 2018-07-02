@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DakiHunt.Api.Controllers
 {
-    public class ApiControllerBase : Controller
+    public abstract class ApiControllerBase : Controller
     {
         // ReSharper disable once InconsistentNaming
         protected readonly IUserService _userService;
@@ -41,7 +41,7 @@ namespace DakiHunt.Api.Controllers
                 return _currentUser;
 
             var authUser = await GetCurrrentAuthUser();
-            _currentUser = await _userService.FirstAsync(user => user.AuthUserKey.Equals(authUser.Id));
+            _currentUser = await _userService.FirstAsync(user => user.AuthUserId.Equals(authUser.Id));
 
             return _currentUser;
         }

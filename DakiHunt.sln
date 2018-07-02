@@ -21,7 +21,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DakiHunt.Api", "DakiHunt.Ap
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DakiHunt.DataAccess", "DakiHunt.DataAccess\DakiHunt.DataAccess.csproj", "{D0B2F0DF-927A-4D39-B47B-91791B5FC4C5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DakiHunt.Interfaces", "DakiHunt.Interfaces\DakiHunt.Interfaces.csproj", "{1422641C-4CD8-4D8F-B145-1B527E553655}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DakiHunt.Interfaces", "DakiHunt.Interfaces\DakiHunt.Interfaces.csproj", "{1422641C-4CD8-4D8F-B145-1B527E553655}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DakiHunt.ApiUtils", "DakiHunt.ApiUtils\DakiHunt.ApiUtils.csproj", "{38033464-A236-4CD5-98C7-B7A961F1BCD9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,6 +59,10 @@ Global
 		{1422641C-4CD8-4D8F-B145-1B527E553655}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1422641C-4CD8-4D8F-B145-1B527E553655}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1422641C-4CD8-4D8F-B145-1B527E553655}.Release|Any CPU.Build.0 = Release|Any CPU
+		{38033464-A236-4CD5-98C7-B7A961F1BCD9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{38033464-A236-4CD5-98C7-B7A961F1BCD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{38033464-A236-4CD5-98C7-B7A961F1BCD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{38033464-A236-4CD5-98C7-B7A961F1BCD9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -69,6 +75,7 @@ Global
 		{1E67CE2C-C697-45DE-9B7B-7D50C56A5CE3} = {770B8288-295F-4A7D-9B5F-F7FD265E3932}
 		{D0B2F0DF-927A-4D39-B47B-91791B5FC4C5} = {770B8288-295F-4A7D-9B5F-F7FD265E3932}
 		{1422641C-4CD8-4D8F-B145-1B527E553655} = {770B8288-295F-4A7D-9B5F-F7FD265E3932}
+		{38033464-A236-4CD5-98C7-B7A961F1BCD9} = {770B8288-295F-4A7D-9B5F-F7FD265E3932}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BB36C2A9-634C-4ACE-8B64-52D403F64786}

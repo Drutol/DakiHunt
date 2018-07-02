@@ -7,7 +7,9 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using DakiHunt.DataAccess.Entities;
 using DakiHunt.DataAccess.Entities.Auth;
+using DakiHunt.DataAccess.Interfaces.Service;
 using DakiHunt.Models.Auth;
 using DakiHunt.Models.Dtos;
 using Microsoft.AspNetCore.Authorization;
@@ -22,22 +24,21 @@ namespace DakiHunt.Api.Controllers
     [ApiController]
     [AllowAnonymous]
     [EnableCors("GlobalPolicy")]
-    [Route("[controller]/[action]")]
     public class AccountController : Controller
     {
         private readonly SignInManager<AuthUser> _signInManager;
         private readonly UserManager<AuthUser> _userManager;
         private readonly IConfiguration _configuration;
+        private readonly IUserService _userService;
 
         public AccountController(
-            UserManager<AuthUser> userManager,
-            SignInManager<AuthUser> signInManager,
-            IConfiguration configuration
-            )
+            UserManager<AuthUser> userManager, SignInManager<AuthUser> signInManager,
+            IConfiguration configuration, IUserService userService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _configuration = configuration;
+            _userService = userService;
         }
 
         [HttpPost]
@@ -75,6 +76,12 @@ namespace DakiHunt.Api.Controllers
                 user.RefreshToken = GenerateRefreshToken(user);
                 await _userManager.UpdateAsync(user);
                 await _signInManager.SignInAsync(user, false);
+
+                _userService.Add(new AppUser
+                {
+                    AuthUserId = user.Id,
+                });
+
                 return Ok(GenerateJwtToken(user));
             }
 

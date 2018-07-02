@@ -6,7 +6,7 @@ using DakiHunt.DataAccess.Entities;
 
 namespace DakiHunt.Interfaces
 {
-    public interface IDomainCrawler
+    public interface IDomainSearchCrawler
     {
         Uri HandledDomain { get; }
 
