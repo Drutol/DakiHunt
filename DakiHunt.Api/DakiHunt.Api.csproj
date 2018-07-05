@@ -10,7 +10,6 @@
 
   <ItemGroup>
     <Folder Include="BL\Crawlers\Mandarake\" />
-    <Folder Include="BL\Crawlers\Mercari\" />
     <Folder Include="BL\Crawlers\Yahoo\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>

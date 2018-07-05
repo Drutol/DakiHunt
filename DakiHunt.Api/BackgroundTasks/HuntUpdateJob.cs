@@ -8,6 +8,7 @@ using DakiHunt.Api.Composition;
 using DakiHunt.DataAccess.Entities;
 using DakiHunt.DataAccess.Interfaces.Service;
 using DakiHunt.Interfaces;
+using DakiHunt.Models.Enums;
 using Microsoft.EntityFrameworkCore;
 using Quartz;
 
@@ -24,6 +25,7 @@ namespace DakiHunt.Api.BackgroundTasks
                 var crawlers = scope.Resolve<IEnumerable<IDomainCrawler>>();
                 var searchCrawlers = scope.Resolve<IEnumerable<IDomainSearchCrawler>>();
                 var monitor = scope.Resolve<IDomainMonitor>();
+
                 using (var huntService = scope.Resolve<IHuntService>())
                 {
                     huntService.ConfigureIncludes().WithChain(query => query.Include(hunt => hunt.HuntedItem.Domain)).Commit();
@@ -55,8 +57,10 @@ namespace DakiHunt.Api.BackgroundTasks
         }
 
 
-        private async Task ProcessItemUpdate(IEnumerable<IDomainCrawler> crawlers,
-            IEnumerable<IDomainSearchCrawler> searchCrawlers, Hunt hunt)
+        private async Task ProcessItemUpdate(
+            IEnumerable<IDomainCrawler> crawlers,
+            IEnumerable<IDomainSearchCrawler> searchCrawlers,
+            Hunt hunt)
         {
             if (hunt.HuntType == Hunt.Type.SingleItem)
             {
@@ -70,17 +74,47 @@ namespace DakiHunt.Api.BackgroundTasks
                     var lastState = hunt.HuntedItem.HistoryStates.Last();
                     if (currentState.DiffWithPrevious(lastState))
                     {
-                        hunt.HuntedItem.HistoryStates.Add(currentState);                        
+                        hunt.HuntedItem.HistoryStates.Add(currentState);      
+                        hunt.HistoryEvents.Add(new HuntEvent
+                        {
+                            Type = HuntEventType.UpdatedWithStateChange
+                        });
                     }
                 }
                 else //it means it faulted, log was created in crawler
                 {
-                    
+                    hunt.HistoryEvents.Add(new HuntEvent
+                    {
+                        Type = HuntEventType.FaultedUpdate
+                    });
                 }
             }
             else
             {
+                var crawler = searchCrawlers.First(domainCrawler =>
+                    domainCrawler.HandledDomain == hunt.HuntedItem.Domain.Uri);
 
+                var currentState = await crawler.ObtainItemState(hunt);
+
+                if (currentState != null)
+                {
+                    var lastState = hunt.SearchHistoryEntries.Last();
+                    if (currentState.DiffWithPrevious(lastState))
+                    {
+                        hunt.SearchHistoryEntries.Add(currentState);
+                        hunt.HistoryEvents.Add(new HuntEvent
+                        {
+                            Type = HuntEventType.UpdatedWithStateChange
+                        });
+                    }
+                }
+                else //it means it faulted, log was created in crawler
+                {
+                    hunt.HistoryEvents.Add(new HuntEvent
+                    {
+                        Type = HuntEventType.FaultedUpdate
+                    });
+                }
             }
         }
     }

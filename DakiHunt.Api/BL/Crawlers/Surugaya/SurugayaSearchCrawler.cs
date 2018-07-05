@@ -11,7 +11,12 @@ namespace DakiHunt.Api.BL.Crawlers
     {
         public Uri HandledDomain { get; } = new Uri("https://www.suruga-ya.jp");
 
-        public Task<DakiItemSearchHistoryEntry> ObtainItemState()
+        public Task<DakiItemSearchHistoryEntry> ObtainItemState(Hunt hunt)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool ValidateUrl(Uri uri)
         {
             throw new NotImplementedException();
         }

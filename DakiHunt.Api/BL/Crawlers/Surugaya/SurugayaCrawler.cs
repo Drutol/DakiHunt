@@ -25,45 +25,45 @@ namespace DakiHunt.Api.BL.Crawlers
 
         public async Task<DakiItemHistoryEntry> ObtainItemState(Hunt hunt)
         {
-            using (var client = HttpClientFactory.Create(new SocketsHttpHandler()))
+            var client = HttpClientFactory.Create();
+            
+            try
             {
-                try
+                var rawHtml = await client.GetStreamAsync(hunt.HuntedItem.Url);
+                var doc = new HtmlDocument();
+                doc.Load(rawHtml);
+
+
+                var infoSection = doc.DocumentNode.Descendants("div")
+                    .First(node => node.HasAttribute("id", "sellInfo_left"));
+
+                var output = new DakiItemHistoryEntry
                 {
-                    var rawHtml = await client.GetStreamAsync(hunt.HuntedItem.Url);
-                    var doc = new HtmlDocument();
-                    doc.Load(rawHtml);
+                    DateTime = DateTime.UtcNow,
+                };
 
-
-                    var infoSection = doc.DocumentNode.Descendants("div")
-                        .First(node => node.HasAttribute("id", "sellInfo_left"));
-
-                    var output = new DakiItemHistoryEntry
-                    {
-                        DateTime = DateTime.UtcNow,
-                    };
-
-                    if (infoSection.InnerText.Contains("品切れ中です"))
-                    {
-                        output.IsAvailable = false;
-                        output.Price = -1;                      
-                    }
-                    else
-                    {
-                        output.IsAvailable = true;
-                        var priceSectionText = infoSection.Descendants("p").First(node => node.HasAttribute("id", "price")).InnerText;
-                        var parts = priceSectionText.Split('円');
-                        output.Price = int.Parse(parts[0].Replace(",",""));
-                    }
-
-                    return output;
-                }
-                catch (Exception e)
+                if (infoSection.InnerText.Contains("品切れ中です"))
                 {
-                    _logger.LogError(e,
-                        $"Error parsing single surugaya item. Hunt {hunt.Id}, item {hunt.HuntedItem.Id}");
-                    return null;
+                    output.IsAvailable = false;
+                    output.Price = -1;                      
                 }
-            }           
+                else
+                {
+                    output.IsAvailable = true;
+                    var priceSectionText = infoSection.Descendants("p").First(node => node.HasAttribute("id", "price")).InnerText;
+                    var parts = priceSectionText.Split('円');
+                    output.Price = int.Parse(parts[0].Replace(",",""));
+                }
+
+                return output;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e,
+                    $"Error parsing single surugaya item. Hunt {hunt.Id}, item {hunt.HuntedItem.Id}");
+                return null;
+            }
+                  
         }
 
         public bool ValidateUrl(Uri uri)

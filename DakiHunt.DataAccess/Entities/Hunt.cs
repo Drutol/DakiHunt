@@ -23,6 +23,10 @@ namespace DakiHunt.DataAccess.Entities
         public bool IsActive { get; set; }
         public bool IsFinished { get; set; }
 
+        public string[] SearchRequiredPhrases { get; set; }
+        public string[] SearchForbiddenPhrases { get; set; }
+
+        public ICollection<DakiItemSearchHistoryEntry> SearchHistoryEntries { get; set; }
         public ICollection<HuntEvent> HistoryEvents { get; set; }
 
         public Type HuntType { get; set; }

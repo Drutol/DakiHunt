@@ -13,20 +13,27 @@ namespace DakiHunt.DataAccess.Entities
     public class DakiItemSearchHistoryEntry : IModelWithRelation
     {
         private Lazy<List<DakiItemSearchResultEntry>> _results;
+        private List<DakiItemSearchResultEntry> _scrappedResults;
 
         public long Id { get; set; }
 
         public DateTime DateTime { get; set; }
-        public string ResultsJson { get; set; }
+        public string ResultsJson { get; private set; }
 
         [NotMapped]
         public Lazy<List<DakiItemSearchResultEntry>> Results =>
             _results ?? (_results = new Lazy<List<DakiItemSearchResultEntry>>(
-                () => JsonConvert.DeserializeObject<List<DakiItemSearchResultEntry>>(ResultsJson)));
+                () => _scrappedResults ?? JsonConvert.DeserializeObject<List<DakiItemSearchResultEntry>>(ResultsJson)));
 
 
         public string[] New { get; set; }
         public string[] Sold { get; set; }
+
+        public void SetScrapingResults(List<DakiItemSearchResultEntry> entries)
+        {
+            _scrappedResults = entries;
+            ResultsJson = JsonConvert.SerializeObject(entries);
+        }
 
         /// <summary>
         ///     Checks if item state differs, if it does returns true.
@@ -43,6 +50,8 @@ namespace DakiHunt.DataAccess.Entities
 
             New = diff.Added.Select(entry => entry.Identifier).ToArray();
             Sold = diff.Modified.Where(entry => !entry.IsAvailable).Select(entry => entry.Identifier).ToArray();
+
+            //TODO Diff prices
 
             return true;
         }
